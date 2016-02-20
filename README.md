@@ -11,7 +11,7 @@ a cross-platform back-end.
 
 # How to use this image
 
-    sudo docker run -it --name bit -d mlamp/transmission
+    sudo docker run -d --name transmission mlamp/transmission
 
 **NOTE**: The default username/password are `admin`/`admin`. See `TRUSER` and
 `TRGROUP` below, for how to change them.
@@ -22,7 +22,7 @@ a cross-platform back-end.
 
 OR set local storage:
 
-    sudo docker run -d --restart always --name transmission -p 9091:9091 \
+    sudo docker run -d --name transmission -p 9091:9091 \
                 -v /path/to/directory:/var/lib/transmission-daemon/downloads \
                 -d mlamp/transmission
 
