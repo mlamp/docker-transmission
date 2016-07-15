@@ -14,6 +14,7 @@ RUN export DEBIAN_FRONTEND='noninteractive' && \
     apt-get update -qq && \
     apt-get install -qqy software-properties-common python-software-properties && \
     add-apt-repository multiverse && \
+    add-apt-repository ppa:transmissionbt/ppa && \
     apt-get update -qq && \
     apt-get install -qqy --no-install-recommends transmission-daemon curl unrar ca-certificates cksfv \
                 $(apt-get -s dist-upgrade|awk '/^Inst.*ecurity/ {print $2}')
