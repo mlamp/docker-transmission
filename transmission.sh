@@ -84,6 +84,7 @@ done
 
 chown -Rh debian-transmission. $dir 2>&1 | grep -iv 'Read-only' || :
 
+
 if [[ $# -ge 1 && -x $(which $1 2>&-) ]]; then
     exec "$@"
 elif [[ $# -ge 1 ]]; then
@@ -93,10 +94,13 @@ elif ps -ef | egrep -v 'grep|transmission.sh' | grep -q transmission; then
     echo "Service already running, please restart container to apply changes"
 else
     # Initialize blocklist
+    mkfifo -m 600 /tmp/logpipe
+    cat <> /tmp/logpipe 1>&2 &
+
     exec su -l debian-transmission -s /bin/bash -c "exec transmission-daemon \
                 --config-dir $dir/info --encryption-preferred \
-                --auth --dht --foreground --log-error -e /dev/stdout \
+                --auth --dht --foreground --log-error -e /tmp/logpipe \
                 --download-dir $dir/downloads --incomplete-dir $dir/incomplete \
                 --username '${TRUSER:-admin}' --password '${TRPASSWD:-admin}' \
-                --allowed \\* 2>&1"
+                --allowed \\* &> /tmp/logpipe"
 fi
