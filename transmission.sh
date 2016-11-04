@@ -94,13 +94,10 @@ elif ps -ef | egrep -v 'grep|transmission.sh' | grep -q transmission; then
     echo "Service already running, please restart container to apply changes"
 else
     # Initialize blocklist
-    mkfifo -m 600 /tmp/logpipe
-    cat <> /tmp/logpipe 1>&2 &
-
     exec su -l debian-transmission -s /bin/bash -c "exec transmission-daemon \
                 --config-dir $dir/info --encryption-preferred \
-                --auth --dht --foreground --log-error -e /tmp/logpipe \
+                --auth --dht --foreground --log-info \
                 --download-dir $dir/downloads --incomplete-dir $dir/incomplete \
                 --username '${TRUSER:-admin}' --password '${TRPASSWD:-admin}' \
-                --allowed \\* &> /tmp/logpipe"
+                --allowed \\*"
 fi
